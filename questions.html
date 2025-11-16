@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار حقوق الإنسان</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            padding: 30px 0;
+        }
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .btn-primary {
+            background: white;
+            color: #667eea;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+        .btn-secondary {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid white;
+        }
+        .btn-secondary:hover {
+            background: white;
+            color: #667eea;
+        }
+        .search-box {
+            margin-bottom: 30px;
+        }
+        .search-box input {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1em;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: right;
+        }
+        .question-container {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        .question-container:hover {
+            transform: translateY(-5px);
+        }
+        .question-number {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 50px;
+            font-size: 0.9em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .question-text {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        .options {
+            display: grid;
+            gap: 12px;
+        }
+        .option {
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #f9f9f9;
+            text-align: center;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+        .option:hover {
+            border-color: #667eea;
+            background: #f0f3ff;
+        }
+        .option.correct {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+        .option.incorrect {
+            background: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+        .answer-status {
+            margin-top: 15px;
+            padding: 12px 15px;
+            border-radius: 10px;
+            font-weight: bold;
+            display: none;
+        }
+        .answer-status.show {
+            display: block;
+        }
+        .answer-status.correct {
+            background: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+        .answer-status.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+        .stats {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        .stats-item {
+            display: inline-block;
+            margin: 10px 20px;
+        }
+        .stats-label {
+            color: #999;
+            font-size: 0.9em;
+        }
+        .stats-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+        .category-filter {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .category-btn {
+            padding: 10px 20px;
+            border: 2px solid white;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+        .category-btn:hover,
+        .category-btn.active {
+            background: white;
+            color: #667eea;
+        }
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+            .controls {
+                flex-direction: column;
+            }
+            .btn {
+                width: 100%;
+            }
+            .question-text {
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏛️ اختبار حقوق الإنسان</h1>
+            <p>أسئلة صح وغلط</p>
+        </div>
+
+        <div class="stats">
+            <div class="stats-item">
+                <div class="stats-label">إجمالي الأسئلة</div>
+                <div class="stats-value" id="totalQuestions">39</div>
+            </div>
+            <div class="stats-item">
+                <div class="stats-label">الأسئلة الصحيحة</div>
+                <div class="stats-value" id="correctCount">0</div>
+            </div>
+            <div class="stats-item">
+                <div class="stats-label">النسبة المئوية</div>
+                <div class="stats-value" id="percentage">0%</div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-primary" onclick="showAllQuestions()">عرض جميع الأسئلة</button>
+            <button class="btn btn-secondary" onclick="resetAll()">إعادة تعيين</button>
+        </div>
+
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="ابحث عن سؤال..." onkeyup="filterQuestions()">
+        </div>
+
+        <div class="category-filter" id="categoryFilter"></div>
+
+        <div id="questionsContainer"></div>
+    </div>
+
+    <script>
+        const questions = [
+            {id: 1, category: "صح وغلط", question: "Aristotle, Plato and Socrates wrote extensively on people's rights to own property, participate in public affair, and have their say in political life.", options: ["True", "False"], correct: 0},
+            {id: 2, category: "صح وغلط", question: "Abolishing slavery in the USA did not take place in the whole country at the same time.", options: ["True", "False"], correct: 0},
+            {id: 3, category: "صح وغلط", question: "Human rights differ according to each country, thus they are not universal.", options: ["True", "False"], correct: 1},
+            {id: 4, category: "صح وغلط", question: "Characteristics of human rights include that they cannot be waived or taken away, and they impose obligations of action and omission, particularly on States.", options: ["True", "False"], correct: 0},
+            {id: 5, category: "صح وغلط", question: "Human rights standards require a certain set of performance standards which are expected to be followed by duty-bearers at all levels of society—but especially by the Government and all its organs and institutions.", options: ["True", "False"], correct: 0},
+            {id: 6, category: "صح وغلط", question: "Obligations of human rights are to respect, protect and reform all rights regardless of race, gender or age.", options: ["True", "False"], correct: 1},
+            {id: 7, category: "صح وغلط", question: "The nineteenth century witnessed the abolishment of slavery in Britain.", options: ["True", "False"], correct: 0},
+            {id: 8, category: "صح وغلط", question: "With the victory of northern states, slavery was eventually abolished in the USA putting an end to stealing a person's freedom on the grounds of skin color or race.", options: ["True", "False"], correct: 0},
+            {id: 9, category: "صح وغلط", question: "It was the horrors of WWI that gave birth to the United Nations in 1945.", options: ["True", "False"], correct: 0},
+            {id: 10, category: "صح وغلط", question: "The UDHR consists of 50 articles.", options: ["True", "False"], correct: 1},
+            {id: 11, category: "صح وغلط", question: "The UDHR was adopted by the United Nations General Assembly on December 10, 1948 in London.", options: ["True", "False"], correct: 1},
+            {id: 12, category: "صح وغلط", question: "The Declaration was the outcome of the experience of the World War I and it represents the first global expression of rights to which all human beings are entitled.", options: ["True", "False"], correct: 1},
+            {id: 13, category: "صح وغلط", question: "It consists of 30 articles which have been elaborated in later international treaties, regional human rights instruments, national constitutions and laws.", options: ["True", "False"], correct: 0},
+            {id: 14, category: "صح وغلط", question: "The preamble is the introductory statement that appears before the UDHR to specify certain points in it.", options: ["True", "False"], correct: 0},
+            {id: 15, category: "صح وغلط", question: "The sixth highlights that disrespect of human rights resulted in brutal acts which offended the conscience of mankind and stressed the main four freedoms (of speech and belief and from want and fear) for all people.", options: ["True", "False"], correct: 1},
+            {id: 16, category: "صح وغلط", question: "The fifth relates human rights to the development of friendly relations between nations.", options: ["True", "False"], correct: 0},
+            {id: 17, category: "صح وغلط", question: "The seventh links the Declaration back to the United Nations Charter which reaffirms faith in basic human rights and dignity of all human beings.", options: ["True", "False"], correct: 0},
+            {id: 18, category: "صح وغلط", question: "The foundation of justice, freedom, and peace in the world is the economic prosperity of all human beings.", options: ["True", "False"], correct: 1},
+            {id: 19, category: "صح وغلط", question: "It is essential, if man is not to be compelled to have recourse, as a last resort, to rebellion against tyranny and oppression, that human rights should be protected by the rule of law.", options: ["True", "False"], correct: 0},
+            {id: 20, category: "صح وغلط", question: "Peoples of the United Nations have in the Charter reaffirmed their faith in fundamental human rights, in the dignity and worth of the human person and in the equal rights of men and women.", options: ["True", "False"], correct: 0},
+            {id: 21, category: "صح وغلط", question: "No one shall be held in slavery or servitude; slavery and the slave trade shall be prohibited in all their forms.", options: ["True", "False"], correct: 0},
+            {id: 22, category: "صح وغلط", question: "Some people might be subjected to torture or to cruel, inhuman or degrading treatment or punishment.", options: ["True", "False"], correct: 0},
+            {id: 23, category: "صح وغلط", question: "Everyone charged with a penal offence has the right to be presumed innocent until proved guilty according to law in a public trial at which he has no guarantees necessary for his defense.", options: ["True", "False"], correct: 1},
+            {id: 24, category: "صح وغلط", question: "Everyone has the right to work, to free choice of employment, to just and favorable conditions of work and to protection against unemployment.", options: ["True", "False"], correct: 0},
+            {id: 25, category: "صح وغلط", question: "Everyone, with some discrimination, has the right to equal pay for equal work.", options: ["True", "False"], correct: 1},
+            {id: 26, category: "صح وغلط", question: "Everyone has the right to education but education shall not be free.", options: ["True", "False"], correct: 1},
+            {id: 27, category: "صح وغلط", question: "Education shall be directed to the full development of the human personality and to the strengthening of respect for human rights and fundamental freedoms.", options: ["True", "False"], correct: 0},
+            {id: 28, category: "صح وغلط", question: "Everyone has the right to rest and leisure, including reasonable limitation of working hours and periodic holidays without pay.", options: ["True", "False"], correct: 1},
+            {id: 29, category: "صح وغلط", question: "Eighteenth century documents for human rights included women and oppressed groups.", options: ["True", "False"], correct: 1},
+            {id: 30, category: "صح وغلط", question: "Human rights differ according to each country, thus they are not universal.", options: ["True", "False"], correct: 1},
+            {id: 31, category: "صح وغلط", question: "Human rights follow a certain hierarchy of importance.", options: ["True", "False"], correct: 1},
+            {id: 32, category: "صح وغلط", question: "The concept of human rights is purely modern with no traces in history.", options: ["True", "False"], correct: 1},
+            {id: 33, category: "صح وغلط", question: "Obligations of human rights are to respect, protect and reform all rights regardless of race, gender or age.", options: ["True", "False"], correct: 1},
+            {id: 34, category: "صح وغلط", question: "The Universal Declaration of Human Rights (UDHR) which was adopted on December 10, 1948 in Paris.", options: ["True", "False"], correct: 0},
+            {id: 35, category: "صح وغلط", question: "Human Dignity should be emphasized as the basis for justices and peace in the world.", options: ["True", "False"], correct: 0},
+            {id: 36, category: "صح وغلط", question: "The term individual rights or group rights refers to the rights of such people and groups, including ethnic and religious minorities and indigenous people.", options: ["True", "False"], correct: 1},
+            {id: 37, category: "صح وغلط", question: "The principle of Universality means that human rights belong to and are to be enjoyed by all human beings apart from their race, color, gender, languages, religion, political views, social origin, or other status.", options: ["True", "False"], correct: 0},
+            {id: 38, category: "صح وغلط", question: "Respect is one of obligations to human rights.", options: ["True", "False"], correct: 0},
+            {id: 39, category: "صح وغلط", question: "The UDHR begins with an introductory preamble consisting of six paragraphs followed by a statement 'Proclaiming' the Declaration.", options: ["True", "False"], correct: 1}
+        ];
+
+        let currentFilter = "الكل";
+        let answeredQuestions = {};
+
+        function initializeApp() {
+            createCategoryButtons();
+            displayQuestions(questions);
+        }
+
+        function createCategoryButtons() {
+            const categories = ["الكل", ...new Set(questions.map(q => q.category))];
+            const filterContainer = document.getElementById("categoryFilter");
+            filterContainer.innerHTML = categories.map(cat => 
+                `<button class="category-btn ${cat === 'الكل' ? 'active' : ''}" onclick="filterByCategory('${cat}')">${cat}</button>`
+            ).join("");
+        }
+
+        function filterByCategory(category) {
+            currentFilter = category;
+            document.querySelectorAll(".category-btn").forEach(btn => btn.classList.remove("active"));
+            event.target.classList.add("active");
+            
+            const filtered = category === "الكل" ? questions : questions.filter(q => q.category === category);
+            displayQuestions(filtered);
+        }
+
+        function filterQuestions() {
+            const searchTerm = document.getElementById("searchInput").value.toLowerCase();
+            const filtered = questions.filter(q => 
+                q.question.toLowerCase().includes(searchTerm) || 
+                q.options.some(opt => opt.toLowerCase().includes(searchTerm))
+            );
+            displayQuestions(filtered);
+        }
+
+        function displayQuestions(questionsToShow) {
+            const container = document.getElementById("questionsContainer");
+            
+            if (questionsToShow.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 40px; background: white; border-radius: 15px; color: #999;">لم يتم العثور على أسئلة</div>';
+                return;
+            }
+
+            container.innerHTML = questionsToShow.map(q => `
+                <div class="question-container">
+                    <div class="question-number">السؤال ${q.id}</div>
+                    <div class="question-text">${q.question}</div>
+                    <div class="options">
+                        ${q.options.map((option, index) => `
+                            <div class="option ${answeredQuestions[q.id] !== undefined ? (index === q.correct ? 'correct' : (answeredQuestions[q.id] === index ? 'incorrect' : '')) : ''}" 
+                                 onclick="selectAnswer(${q.id}, ${index}, ${q.correct})">
+                                ${option}
+                            </div>
+                        `).join("")}
+                    </div>
+                    ${answeredQuestions[q.id] !== undefined ? `
+                        <div class="answer-status show ${answeredQuestions[q.id] === q.correct ? 'correct' : 'incorrect'}">
+                            ${answeredQuestions[q.id] === q.correct ? '✓ إجابة صحيحة!' : '✗ إجابة خاطئة - الإجابة الصحيحة هي: ' + q.options[q.correct]}
+                        </div>
+                    ` : ''}
+                </div>
+            `).join("");
+        }
+
+        function selectAnswer(questionId, selectedIndex, correctIndex) {
+            if (answeredQuestions[questionId] === undefined) {
+                answeredQuestions[questionId] = selectedIndex;
+                updateStats();
+                displayQuestions(currentFilter === "الكل" ? questions : questions.filter(q => q.category === currentFilter));
+            }
+        }
+
+        function updateStats() {
+            const correct = Object.keys(answeredQuestions).filter(qId => {
+                const q = questions.find(question => question.id === parseInt(qId));
+                return q && answeredQuestions[qId] === q.correct;
+            }).length;
+
+            const percentage = Math.round((correct / Object.keys(answeredQuestions).length) * 100) || 0;
+            document.getElementById("correctCount").textContent = correct;
+            document.getElementById("percentage").textContent = percentage + "%";
+        }
+
+        function showAllQuestions() {
+            currentFilter = "الكل";
+            document.getElementById("searchInput").value = "";
+            document.querySelectorAll(".category-btn").forEach((btn, idx) => {
+                if (idx === 0) btn.classList.add("active");
+                else btn.classList.remove("active");
+            });
+            displayQuestions(questions);
+        }
+
+        function resetAll() {
+            answeredQuestions = {};
+            document.getElementById("correctCount").textContent = "0";
+            document.getElementById("percentage").textContent = "0%";
+            document.getElementById("searchInput").value = "";
+            showAllQuestions();
+        }
+
+        initializeApp();
+    </script>
+</body>
+</html>
